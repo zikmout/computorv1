@@ -14,8 +14,6 @@ c0 = 0;
 c1 = 0;
 c2 = 0;
 
-#(([\-\+]?[0-9]*(\.[0-9]+)?)\ \*)
-#full ([+-]*([\-\+]?[\ +-]?[0-9]*(\.[0-9]+)?)\ \* X\^\d+)
 eq1 = re.findall(r'([+-]*([\-\+]?[\ +-]?[0-9]*(\.[0-9]+)?)\ \* X\^\d+)', eq)
 print '\neq1 =>', eq1, '\n'
 
@@ -24,12 +22,19 @@ def get_deg(member):
     return member[l - 1]
 
 def push_deg(member_full, deg):
-    if deg == 0:
-        c0 = c0 + member_full[1]
-    elif deg == 1:
-        c1 = c1 + member_full[1]
-    elif deg == 2:
-        c2 = c2 + member_full[1]
+    global c0
+    global c1
+    global c2
+    re = member_full[1].strip(' ')
+    print 'After strip ... ->' + re
+    re = float(re)
+    print 'After re ... ->' , re
+    if deg == '0':
+        c0 = c0 + re
+    elif deg == '1':
+        c1 = c1 + re
+    elif deg == '2':
+        c2 = c2 + re
 
 eq2 = []
 i = 0
@@ -58,17 +63,7 @@ while (i <= len(eq1[0])):
     i += 1
 
 
-print eq2
-
-'''
-proper = []
-for digit in eq1:
-    proper.append(digit[0]);
-print '\npropper =>', proper
-
-for eq1 in proper:
-    print eq1[0]
-'''
+print '\n', eq2
 
 print '\nC0 => ', c0
 print 'C1 => ', c1
