@@ -16,7 +16,15 @@ c1 = 0;
 c2 = 0;
 
 eq1 = re.findall(r'([+-]*([\-\+]?[\ +-]?[0-9]*(\.[0-9]+)?)\ \* X\^\d+)', eq)
-#print '\neq1 =>', eq1, '\n'
+print '\neq1 =>', eq1, '\n'
+
+def search_equal(eq):
+    i = 0
+    while (i < len(eq)):
+        if eq[i] == '=':
+            return i
+        i+=1
+    return 0
 
 def get_deg(member):
     l = len(member)
@@ -27,7 +35,7 @@ def push_deg(member_full, deg, pos, neg):
     global c1
     global c2
     re = member_full[1].strip(' ')
-    #print 'After strip ... ->' + re
+    print 'After strip ... ->' + re
     re = float(re)
     #print 'After re ... ->' , re
     #print 'POS ->>>', pos
@@ -78,15 +86,24 @@ def print_polynomial_degree(c0, c1, c2):
 
 def get_delta(c0, c1, c2):
 #delta = b^2 - 4 * ac = c1^2 - 4 * c2 * c0
-    return c1**2 - 4 * c2 * c0
+    print c0
+    print c1
+    print c2
+    return c1**2 - (4 * c2 * c0)
+
+equal = search_equal(eq)
 
 eq2 = []
+equal_pos = 0
 i = 0
 while (i <= len(eq1[0])):
     pos = 0
     neg = 0
     deg = 0
     #print eq1[i]
+    global equal
+    equal_pos += len(eq1[i][0])
+    print 'LENNNNN.............', len(eq1[i][0])
     if eq1[i][0][0] == '+':
         pos = 1
         eq2.append('pos')
@@ -98,9 +115,19 @@ while (i <= len(eq1[0])):
         eq2.append('pos')
     deg = get_deg(eq1[i][0])
     #print 'deg => ', deg
-    push_deg(eq1[i], deg, pos, neg)
-
-
+    print 'I =', i
+    print 'EQUAL = ', equal
+    print 'EQUAL_POS = ', equal_pos
+    if equal_pos < equal:
+        push_deg(eq1[i], deg, pos, neg)
+    else:
+        if pos == 1:
+            pos = 0
+            neg = 1
+        else:
+            neg = 0
+            pos = 1
+        push_deg(eq1[i], deg, pos, neg)
 
     pos = 0
     neg = 0
@@ -116,8 +143,8 @@ print 'Delta =>', delta
 
 if delta > 0:
     print 'Discriminant is strictly positive, the two solutions are: '
-    print (-c1 + math.sqrt(delta))/(2 * c2)
-    print (-c1 - math.sqrt(delta))/(2 * c2)
+    print (-c1 + math.sqrt(delta))/(2 * c0)
+    print (-c1 - math.sqrt(delta))/(2 * c0)
 
 
 print '\nC0 => ', c0
