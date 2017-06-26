@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import re
+import math
 #print 'Number of arguments', len(sys.argv), 'arguments.'
 #print 'Argument list:', str(sys.argv)
 if (len(sys.argv) != 2):
@@ -15,7 +16,7 @@ c1 = 0;
 c2 = 0;
 
 eq1 = re.findall(r'([+-]*([\-\+]?[\ +-]?[0-9]*(\.[0-9]+)?)\ \* X\^\d+)', eq)
-print '\neq1 =>', eq1, '\n'
+#print '\neq1 =>', eq1, '\n'
 
 def get_deg(member):
     l = len(member)
@@ -26,11 +27,11 @@ def push_deg(member_full, deg, pos, neg):
     global c1
     global c2
     re = member_full[1].strip(' ')
-    print 'After strip ... ->' + re
+    #print 'After strip ... ->' + re
     re = float(re)
-    print 'After re ... ->' , re
-    print 'POS ->>>', pos
-    print 'NEG ->>>', neg
+    #print 'After re ... ->' , re
+    #print 'POS ->>>', pos
+    #print 'NEG ->>>', neg
     if deg == '0':
         if pos == 1:
             c0 = c0 + re
@@ -75,13 +76,17 @@ def print_polynomial_degree(c0, c1, c2):
 #test
 #python computor.py "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 0"
 
+def get_delta(c0, c1, c2):
+#delta = b^2 - 4 * ac = c1^2 - 4 * c2 * c0
+    return c1**2 - 4 * c2 * c0
+
 eq2 = []
 i = 0
 while (i <= len(eq1[0])):
     pos = 0
     neg = 0
     deg = 0
-    print eq1[i]
+    #print eq1[i]
     if eq1[i][0][0] == '+':
         pos = 1
         eq2.append('pos')
@@ -92,7 +97,7 @@ while (i <= len(eq1[0])):
         pos = 1
         eq2.append('pos')
     deg = get_deg(eq1[i][0])
-    print 'deg => ', deg
+    #print 'deg => ', deg
     push_deg(eq1[i], deg, pos, neg)
 
 
@@ -106,6 +111,14 @@ print '\n', eq2
 
 print_reduced(c0, c1, c2)
 print_polynomial_degree(c0, c1, c2)
+delta = get_delta(c0, c1, c2)
+print 'Delta =>', delta
+
+if delta > 0:
+    print 'Discriminant is strictly positive, the two solutions are: '
+    print (-c1 + math.sqrt(delta))/(2 * c2)
+    print (-c1 - math.sqrt(delta))/(2 * c2)
+
 
 print '\nC0 => ', c0
 print 'C1 => ', c1
