@@ -21,7 +21,7 @@ def get_deg(member):
     l = len(member)
     return member[l - 1]
 
-def push_deg(member_full, deg):
+def push_deg(member_full, deg, pos, neg):
     global c0
     global c1
     global c2
@@ -29,12 +29,51 @@ def push_deg(member_full, deg):
     print 'After strip ... ->' + re
     re = float(re)
     print 'After re ... ->' , re
+    print 'POS ->>>', pos
+    print 'NEG ->>>', neg
     if deg == '0':
-        c0 = c0 + re
+        if pos == 1:
+            c0 = c0 + re
+        else:
+            c0 = c0 - re
     elif deg == '1':
-        c1 = c1 + re
+        if pos:
+            c1 = c1 + re
+        else:
+            c1 = c1 - re
     elif deg == '2':
-        c2 = c2 + re
+        if pos:
+            c2 = c2 + re
+        else:
+            c2 = c2 - re
+
+def print_reduced(c0, c1, c2):
+    if c0 > 0:
+        print '+', c0, ' * X^0',
+    elif c0 < 0:
+        print ' ', c0, ' * X^0',
+    if c1 > 0:
+        print '+', c1, ' * X^1',
+    elif c1 < 0:
+        print ' ', c1, ' * X^1',
+    if c2 > 0:
+        print '+', c2, ' * X^2',
+    elif c2 < 0:
+        print ' ', c2, ' * X^2',
+    print ' = 0'
+
+def print_polynomial_degree(c0, c1, c2):
+    degree = 0
+    if c2 != 0:
+        degree = 2
+    elif c1 != 0:
+        degree = 1
+    elif c0 != 0:
+        degree = 0
+    print 'Polynomial degree: ', degree
+
+#test
+#python computor.py "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 0"
 
 eq2 = []
 i = 0
@@ -54,7 +93,7 @@ while (i <= len(eq1[0])):
         eq2.append('pos')
     deg = get_deg(eq1[i][0])
     print 'deg => ', deg
-    push_deg(eq1[i], deg)
+    push_deg(eq1[i], deg, pos, neg)
 
 
 
@@ -64,6 +103,9 @@ while (i <= len(eq1[0])):
 
 
 print '\n', eq2
+
+print_reduced(c0, c1, c2)
+print_polynomial_degree(c0, c1, c2)
 
 print '\nC0 => ', c0
 print 'C1 => ', c1
