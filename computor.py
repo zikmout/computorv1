@@ -7,6 +7,9 @@ import math
 if (len(sys.argv) != 2):
     print 'Wrong number of arguments. Exit\n'
     sys.exit()
+elif sys.argv[1] == '':
+    print 'Please verify your input. Exit\n'
+    sys.exit()
 else:
     eq = str(sys.argv[1])
     print '\nthe equation is the following: ' + eq
@@ -15,7 +18,20 @@ c0 = 0;
 c1 = 0;
 c2 = 0;
 
+def check_power(eq1):
+    for key in eq1:
+        if key[0][len(key[0]) - 1] > 2:
+            print 'The polynomial degree is stricly greater than 2, I can\'t solve.'
+            sys.exit()
+
 eq1 = re.findall(r'([+-]*([\-\+]?[\ +-]?[0-9]*(\.[0-9]+)?)\ \* X\^\d+)', eq)
+
+check_power(eq1)
+
+if not eq1:
+    print 'Please verify your input. Exit\n'
+    sys.exit();
+
 print '\neq1 =>', eq1, '\n'
 
 def search_equal(eq):
@@ -69,15 +85,20 @@ def print_reduced(c0, c1, c2):
         print '+', c2, ' * X^2',
     elif c2 < 0:
         print ' ', c2, ' * X^2',
+    elif c0 == 0 and c1 == 0 and c2 == 0:
+        print c0, ' * X^0',
     print ' = 0'
 
 def print_polynomial_degree(c0, c1, c2):
+    degree = 0
     if c2 != 0:
         degree = 2
     elif c1 != 0:
         degree = 1
     elif c0 != 0:
         degree = 0
+    else:
+        degree = 3
     return degree
 
 #test
@@ -138,7 +159,7 @@ print_reduced(c0, c1, c2)
 print 'Polynomial degree: ', print_polynomial_degree(c0, c1, c2)
 delta = get_delta(c0, c1, c2)
 print 'Delta =>', delta
-
+#TODO take of the sqrt function to use mine
 if delta > 0 and print_polynomial_degree(c0, c1, c2) == 2:
     print 'Discriminant is strictly positive, the two solutions are: '
     print (-c1 + math.sqrt(delta))/(2 * c2)
@@ -151,8 +172,10 @@ elif delta < 0 and print_polynomial_degree(c0, c1, c2) == 2:
 elif print_polynomial_degree(c0, c1, c2) == 1:
     print 'The solution is: '
     print -c0/c1
-elif print_polynomial_degree(c0, c1, c2) > 2:
-    print 'Program does not handle more than 2nd degree polynomial equations. Exit'
+elif print_polynomial_degree(c0, c1, c2) == 0 and c0 != 0:
+    print 'There is no solution to this equation'
+elif print_polynomial_degree(c0, c1, c2) == 0 and c0 == 0:
+    print 'There an infinite number of solutions to this equation'
 
 print '\nC0 => ', c0
 print 'C1 => ', c1
