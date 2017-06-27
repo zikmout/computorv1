@@ -72,14 +72,13 @@ def print_reduced(c0, c1, c2):
     print ' = 0'
 
 def print_polynomial_degree(c0, c1, c2):
-    degree = 0
     if c2 != 0:
         degree = 2
     elif c1 != 0:
         degree = 1
     elif c0 != 0:
         degree = 0
-    print 'Polynomial degree: ', degree
+    return degree
 
 #test
 #python computor.py "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 0"
@@ -136,15 +135,24 @@ print '\n', eq2
 
 print 'Reduced form:',
 print_reduced(c0, c1, c2)
-print_polynomial_degree(c0, c1, c2)
+print 'Polynomial degree: ', print_polynomial_degree(c0, c1, c2)
 delta = get_delta(c0, c1, c2)
 print 'Delta =>', delta
 
-if delta > 0:
+if delta > 0 and print_polynomial_degree(c0, c1, c2) == 2:
     print 'Discriminant is strictly positive, the two solutions are: '
     print (-c1 + math.sqrt(delta))/(2 * c2)
     print (-c1 - math.sqrt(delta))/(2 * c2)
-
+elif delta == 0 and print_polynomial_degree(c0, c1, c2) == 2:
+    print 'Discriminant is equal to zero, the double real solution is: '
+    print -c1/(2*c2)
+elif delta < 0 and print_polynomial_degree(c0, c1, c2) == 2:
+    print 'Discriminant is less than zero, the equation has two complex solutions but there is no real solution'
+elif print_polynomial_degree(c0, c1, c2) == 1:
+    print 'The solution is: '
+    print -c0/c1
+elif print_polynomial_degree(c0, c1, c2) > 2:
+    print 'Program does not handle more than 2nd degree polynomial equations. Exit'
 
 print '\nC0 => ', c0
 print 'C1 => ', c1
