@@ -86,9 +86,9 @@ def print_polynomial_degree(c0, c1, c2):
 
 def get_delta(c0, c1, c2):
 #delta = b^2 - 4 * ac = c1^2 - 4 * c2 * c0
-    print c0
-    print c1
-    print c2
+    #print c0
+    #print c1
+    #print c2
     return c1**2 - (4 * c2 * c0)
 
 equal = search_equal(eq)
@@ -96,14 +96,12 @@ equal = search_equal(eq)
 eq2 = []
 equal_pos = 0
 i = 0
-while (i <= len(eq1[0])):
+while (i < len(eq1)):
     pos = 0
     neg = 0
     deg = 0
-    #print eq1[i]
-    global equal
     equal_pos += len(eq1[i][0])
-    print 'LENNNNN.............', len(eq1[i][0])
+    #print 'LENNNNN.............', len(eq1[i][0])
     if eq1[i][0][0] == '+':
         pos = 1
         eq2.append('pos')
@@ -115,9 +113,9 @@ while (i <= len(eq1[0])):
         eq2.append('pos')
     deg = get_deg(eq1[i][0])
     #print 'deg => ', deg
-    print 'I =', i
-    print 'EQUAL = ', equal
-    print 'EQUAL_POS = ', equal_pos
+    #print 'I =', i
+    #print 'EQUAL = ', equal
+    #print 'EQUAL_POS = ', equal_pos
     if equal_pos < equal:
         push_deg(eq1[i], deg, pos, neg)
     else:
@@ -136,6 +134,7 @@ while (i <= len(eq1[0])):
 
 print '\n', eq2
 
+print 'Reduced form:',
 print_reduced(c0, c1, c2)
 print_polynomial_degree(c0, c1, c2)
 delta = get_delta(c0, c1, c2)
@@ -143,8 +142,8 @@ print 'Delta =>', delta
 
 if delta > 0:
     print 'Discriminant is strictly positive, the two solutions are: '
-    print (-c1 + math.sqrt(delta))/(2 * c0)
-    print (-c1 - math.sqrt(delta))/(2 * c0)
+    print (-c1 + math.sqrt(delta))/(2 * c2)
+    print (-c1 - math.sqrt(delta))/(2 * c2)
 
 
 print '\nC0 => ', c0
