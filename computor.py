@@ -1,9 +1,15 @@
 #!/usr/bin/python
 import sys
 import re
-import math
-#print 'Number of arguments', len(sys.argv), 'arguments.'
-#print 'Argument list:', str(sys.argv)
+
+def sqrt(x):
+    last_guess= x/2.0
+    while True:
+        guess= (last_guess + x/last_guess)/2
+        if abs(guess - last_guess) < .000001: # example threshold
+            return guess
+        last_guess= guess
+
 if (len(sys.argv) != 2):
     print 'Wrong number of arguments. Exit\n'
     sys.exit()
@@ -18,15 +24,37 @@ c0 = 0;
 c1 = 0;
 c2 = 0;
 
+eqtest = re.findall(r'([+-]*([\-\+]?[\ +-]?[0-9]*(\.[0-9]+)?)\ \* X\^\d+.\d+)', eq)
+
+print 'EQTEST ------->', eqtest
+if eqtest:
+    print 'Please verify your input: It seems you power have coma). Exit\n'
+    sys.exit()
+
+
 def check_power(eq1):
     for key in eq1:
-        if key[0][len(key[0]) - 1] > 2:
+        print 'KEY-------->',  float(key[0][len(key[0]) - 1])
+
+        if float(key[0][len(key[0]) - 1]) > 2:
             print 'The polynomial degree is stricly greater than 2, I can\'t solve.'
             sys.exit()
 
+def check_consistency(eq1, av):
+    i = 0
+    for letter in av:
+        if letter == '^':
+            i += 1
+    #print 'eq1 LEN == ', len(eq1)
+    if len(eq1) != i:
+        print 'Please verify your input(2). Exit\n'
+        sys.exit()
 eq1 = re.findall(r'([+-]*([\-\+]?[\ +-]?[0-9]*(\.[0-9]+)?)\ \* X\^\d+)', eq)
 
+print '\neq1 =>', eq1, '\n'
 check_power(eq1)
+check_consistency(eq1, sys.argv[1])
+
 
 if not eq1:
     print 'Please verify your input. Exit\n'
@@ -105,7 +133,7 @@ def print_polynomial_degree(c0, c1, c2):
 #python computor.py "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 0"
 
 def get_delta(c0, c1, c2):
-#delta = b^2 - 4 * ac = c1^2 - 4 * c2 * c0
+    #delta = b^2 - 4 * ac = c1^2 - 4 * c2 * c0
     #print c0
     #print c1
     #print c2
@@ -151,7 +179,6 @@ while (i < len(eq1)):
     neg = 0
     i += 1
 
-
 print '\n', eq2
 
 print 'Reduced form:',
@@ -159,22 +186,23 @@ print_reduced(c0, c1, c2)
 print 'Polynomial degree: ', print_polynomial_degree(c0, c1, c2)
 delta = get_delta(c0, c1, c2)
 print 'Delta =>', delta
-#TODO take of the sqrt function to use mine
 if delta > 0 and print_polynomial_degree(c0, c1, c2) == 2:
     print 'Discriminant is strictly positive, the two solutions are: '
-    print (-c1 + math.sqrt(delta))/(2 * c2)
-    print (-c1 - math.sqrt(delta))/(2 * c2)
+    print (-c1 + (delta**(1/2)))/(2 * c2)
+    print (-c1 - (delta**(1/2)))/(2 * c2)
 elif delta == 0 and print_polynomial_degree(c0, c1, c2) == 2:
     print 'Discriminant is equal to zero, the double real solution is: '
     print -c1/(2*c2)
 elif delta < 0 and print_polynomial_degree(c0, c1, c2) == 2:
-    print 'Discriminant is less than zero, the equation has two complex solutions but there is no real solution'
+    print 'There are two complex solutions which are:'
+    print -c1, ' + i *', sqrt(-delta), '/',(2 * c2)
+    print -c1, ' - i *', sqrt(-delta), '/',(2 * c2)
 elif print_polynomial_degree(c0, c1, c2) == 1:
     print 'The solution is: '
     print -c0/c1
 elif print_polynomial_degree(c0, c1, c2) == 0 and c0 != 0:
     print 'There is no solution to this equation'
-elif print_polynomial_degree(c0, c1, c2) == 0 and c0 == 0:
+elif print_polynomial_degree(c0, c1, c2) == 3 or (print_polynomial_degree(c0, c1, c2) == 0 and c0 == 0):
     print 'There an infinite number of solutions to this equation'
 
 print '\nC0 => ', c0
