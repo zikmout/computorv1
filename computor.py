@@ -183,7 +183,8 @@ print '\n', eq2
 
 print 'Reduced form:',
 print_reduced(c0, c1, c2)
-print 'Polynomial degree: ', print_polynomial_degree(c0, c1, c2)
+if print_polynomial_degree(c0, c1, c2) != 3:
+    print 'Polynomial degree: ', print_polynomial_degree(c0, c1, c2)
 delta = get_delta(c0, c1, c2)
 print 'Delta =>', delta
 if delta > 0 and print_polynomial_degree(c0, c1, c2) == 2:
